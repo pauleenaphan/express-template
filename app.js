@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
 const mongoose = require("mongoose");
 
 var indexRouter = require('./routes/index');
@@ -39,9 +40,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// const mongoDB = process.env.MONGODB_URI || process.env.DEV_DB_URL;
-// mongoose.connect(mongoDB);
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "mongo connection error"));
+require('dotenv').config();
+
+const dev_db_url = process.env.DEV_DB_URL;
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
+
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 module.exports = app;
